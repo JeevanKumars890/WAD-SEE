@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Track expenses and understand spending patterns." />
+    <title>WAD HOUSE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Main navigation">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">W</div>
+          <div>
+            <span class="brand-name">WAD HOUSE</span>
+            <span class="brand-tag">KEEP SMILING 🥹</span>
+          </div>
+        </div>
+
+        <nav class="nav">
+          <a class="nav-link active" href="#overview">
+            <span aria-hidden="true">◫</span>
+            Overview
+          </a>
+          <a class="nav-link" href="#transactions">
+            <span aria-hidden="true">◌</span>
+            Transactions
+          </a>
+        </nav>
+
+        <div class="sidebar-card">
+          <p>Monthly target</p>
+          <strong id="monthlyTarget">₹20,000.00</strong>
+          <div class="progress" aria-label="Progress toward monthly target">
+            <span id="targetProgress" style="width: 62%"></span>
+          </div>
+          <small id="targetStatus">₹20,000.00 left</small>
+        </div>
+      </aside>
+
+      <main class="main-content" id="overview">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Financial overview</p>
+            <h1>Spending dashboard</h1>
+          </div>
+          <button id="openExpenseModal" class="primary-button" type="button">+ Add expense</button>
+        </header>
+
+        <section class="summary-grid" aria-label="Expense summary">
+          <article class="summary-card accent-purple">
+            <div>
+              <p>Total spent</p>
+              <h2 id="totalSpent">$0.00</h2>
+            </div>
+          </article>
+          <article class="summary-card accent-blue">
+            <div>
+              <p>Average expense</p>
+              <h2 id="averageExpense">$0.00</h2>
+            </div>
+          </article>
+          <article class="summary-card accent-green">
+            <div>
+              <p>Largest category</p>
+              <h2 id="largestCategory">—</h2>
+            </div>
+          </article>
+          <article class="summary-card accent-orange">
+            <div>
+              <p>Top category</p>
+              <h2 id="topCategory">—</h2>
+            </div>
+          </article>
+        </section>
+
+        <section class="controls" aria-label="Expense filters">
+          <label>
+            Category
+            <select id="categoryFilter">
+              <option value="">All categories</option>
+            </select>
+          </label>
+          <label>
+            From
+            <input id="startDate" type="date" />
+          </label>
+          <label>
+            To
+            <input id="endDate" type="date" />
+          </label>
+          <button id="resetFilters" class="secondary-button" type="button">Reset</button>
+        </section>
+
+        <section class="content-grid">
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Breakdown</p>
+                <h3>Spending categories</h3>
+              </div>
+            </div>
+            <div id="categoryList" class="category-list" aria-live="polite"></div>
+          </article>
+        </section>
+
+        <section class="transactions-section" id="transactions">
+          <article class="panel" id="transactions-card">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Recent activity</p>
+                <h3>Transactions</h3>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Item</th>
+                    <th>Category</th>
+                    <th>Date</th>
+                    <th class="amount-col">Amount</th>
+                  </tr>
+                </thead>
+                <tbody id="transactionTable"></tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+
+    <div id="expenseModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="expenseModalTitle">
+      <div class="modal-backdrop" data-close-modal="true"></div>
+      <div class="modal-panel">
+        <div class="modal-header">
+          <div>
+            <p class="eyebrow">New expense</p>
+            <h3 id="expenseModalTitle">Add transaction</h3>
+          </div>
+          <button id="closeExpenseModal" class="icon-button" type="button" aria-label="Close add expense form">×</button>
+        </div>
+
+        <form id="expenseForm" novalidate>
+          <div class="form-grid">
+            <label>
+              Date
+              <input id="expenseDate" name="date" type="date" required />
+            </label>
+            <label>
+              Category
+              <select id="expenseCategory" name="category" required>
+                <option value="">Select category</option>
+              </select>
+            </label>
+            <label class="full-width">
+              Description
+              <input id="expenseDescription" name="description" type="text" maxlength="80" placeholder="e.g. Grocery shopping" required />
+            </label>
+            <label>
+              Amount (₹)
+              <input id="expenseAmount" name="amount" type="number" min="0.01" step="0.01" placeholder="0.00" required />
+            </label>
+          </div>
+
+          <p id="expenseError" class="form-message error" role="alert" aria-live="polite"></p>
+          <p id="expenseSuccess" class="form-message success" aria-live="polite"></p>
+
+          <div class="modal-actions">
+            <button id="cancelExpense" class="secondary-button" type="button">Cancel</button>
+            <button class="primary-button" type="submit">Save expense</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
