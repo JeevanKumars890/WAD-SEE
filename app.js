@@ -2,18 +2,12 @@ import {
   addExpenseRecord,
   calculateSummary,
   calculateMonthlyTrend,
-  getTopCategories,
   filterExpenses,
-} from './expense-analytics.mjs';
+} from './expense-analytics.js';
 
 const STORAGE_KEY = 'spendsense-expenses';
-const defaultExpenses = [
-  { id: 1, date: '2026-10-06', category: 'Housing', description: 'RENT', amount: 10000 },
-  { id: 2, date: '2026-10-02', category: 'Travel', description: "GHANDI'S HOME", amount: 500 },
-];
 
-localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultExpenses));
-const expenses = [...defaultExpenses];
+const expenses = loadExpenses();
 
 const categories = [
   'Food',
@@ -45,7 +39,6 @@ const elements = {
   totalSpent: document.querySelector('#totalSpent'),
   averageExpense: document.querySelector('#averageExpense'),
   largestCategory: document.querySelector('#largestCategory'),
-  topCategory: document.querySelector('#topCategory'),
   categoryFilter: document.querySelector('#categoryFilter'),
   startDate: document.querySelector('#startDate'),
   endDate: document.querySelector('#endDate'),
@@ -65,16 +58,15 @@ const elements = {
   expenseDescription: document.querySelector('#expenseDescription'),
   expenseAmount: document.querySelector('#expenseAmount'),
   expenseError: document.querySelector('#expenseError'),
-  expenseSuccess: document.querySelector('#expenseSuccess'),
 };
 
 function loadExpenses() {
-  try {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    return Array.isArray(saved) && saved.length ? saved : defaultExpenses;
-  } catch {
-    return defaultExpenses;
-  }
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved === null) return [];
+
+  const parsed = JSON.parse(saved);
+  if (!Array.isArray(parsed)) throw new Error('Saved expenses data is invalid.');
+  return parsed;
 }
 
 function saveExpenses() {
@@ -100,12 +92,10 @@ function getFilteredExpenses() {
 function setSummary(filtered) {
   const summary = calculateSummary(filtered);
   const [largestCategory] = summary.byCategory;
-  const [topCategory] = getTopCategories(filtered, 1);
 
   elements.totalSpent.textContent = formatCurrency(summary.total);
   elements.averageExpense.textContent = formatCurrency(summary.average);
   elements.largestCategory.textContent = largestCategory ? largestCategory.category : '—';
-  elements.topCategory.textContent = topCategory ? topCategory.category : '—';
 
   const monthlyTarget = 20000;
   const spentThisMonth = calculateMonthlyTrend(filtered).at(-1)?.total ?? 0;
@@ -120,7 +110,6 @@ function setSummary(filtered) {
 function openExpenseDialog() {
   elements.expenseForm.reset();
   elements.expenseError.textContent = '';
-  elements.expenseSuccess.textContent = '';
   elements.expenseModal.classList.remove('hidden');
   elements.expenseDate.value = new Date().toISOString().slice(0, 10);
   elements.expenseDate.focus();
@@ -152,7 +141,7 @@ function renderTransactions(filtered) {
   elements.transactionTable.innerHTML = filtered.length
     ? filtered.slice().sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 7).map((expense) => `
         <tr>
-          <td>${expense.category}</td>
+          <td>${expense.description}</td>
           <td><span class="tag">${expense.category}</span></td>
           <td>${new Date(`${expense.date}T00:00:00`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</td>
           <td class="money">${formatCurrency(expense.amount)}</td>
@@ -169,7 +158,6 @@ function updateDashboard() {
 }
 
 for (const control of [elements.categoryFilter, elements.startDate, elements.endDate]) {
-  control.addEventListener('input', updateDashboard);
   control.addEventListener('change', updateDashboard);
 }
 
@@ -197,10 +185,9 @@ elements.expenseModal.addEventListener('click', (event) => {
 elements.expenseForm.addEventListener('submit', (event) => {
   event.preventDefault();
   elements.expenseError.textContent = '';
-  elements.expenseSuccess.textContent = '';
 
   try {
-    const record = addExpenseRecord(expenses, {
+    addExpenseRecord(expenses, {
       date: elements.expenseDate.value,
       category: elements.expenseCategory.value,
       description: elements.expenseDescription.value,
@@ -211,7 +198,6 @@ elements.expenseForm.addEventListener('submit', (event) => {
     populateCategories();
     updateDashboard();
     closeExpenseDialog();
-    elements.expenseSuccess.textContent = `${record.description} added successfully.`;
   } catch (error) {
     elements.expenseError.textContent = error.message;
   }

@@ -7,7 +7,7 @@ import {
   calculateMonthlyTrend,
   getTopCategories,
   filterExpenses,
-} from './expense-analytics.mjs';
+} from './expense-analytics.js';
 
 const expenses = [
   { id: 1, date: '2026-01-05', category: 'Food', amount: 45.5 },

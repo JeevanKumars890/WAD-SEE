@@ -17,7 +17,7 @@
           <div class="brand-mark" aria-hidden="true">W</div>
           <div>
             <span class="brand-name">WAD HOUSE</span>
-            <span class="brand-tag">KEEP SMILING 🥸</span>
+            <span class="brand-tag">KEEP SMILING </span>
           </div>
         </div>
 
@@ -25,6 +25,10 @@
           <a class="nav-link active" href="#overview">
             <span aria-hidden="true">◫</span>
             Overview
+          </a>
+          <a class="nav-link" href="#categories">
+            <span aria-hidden="true">◉</span>
+            Categories
           </a>
           <a class="nav-link" href="#transactions">
             <span aria-hidden="true">◌</span>
@@ -36,7 +40,7 @@
           <p>Monthly target</p>
           <strong id="monthlyTarget">₹20,000.00</strong>
           <div class="progress" aria-label="Progress toward monthly target">
-            <span id="targetProgress" style="width: 62%"></span>
+            <span id="targetProgress"></span>
           </div>
           <small id="targetStatus">₹20,000.00 left</small>
         </div>
@@ -52,28 +56,22 @@
         </header>
 
         <section class="summary-grid" aria-label="Expense summary">
-          <article class="summary-card accent-purple">
+          <article class="summary-card">
             <div>
               <p>Total spent</p>
-              <h2 id="totalSpent">$0.00</h2>
+              <h2 id="totalSpent">₹0.00</h2>
             </div>
           </article>
-          <article class="summary-card accent-blue">
+          <article class="summary-card">
             <div>
               <p>Average expense</p>
-              <h2 id="averageExpense">$0.00</h2>
+              <h2 id="averageExpense">₹0.00</h2>
             </div>
           </article>
-          <article class="summary-card accent-green">
+          <article class="summary-card">
             <div>
               <p>Largest category</p>
               <h2 id="largestCategory">—</h2>
-            </div>
-          </article>
-          <article class="summary-card accent-orange">
-            <div>
-              <p>Top category</p>
-              <h2 id="topCategory">—</h2>
             </div>
           </article>
         </section>
@@ -96,7 +94,7 @@
           <button id="resetFilters" class="secondary-button" type="button">Reset</button>
         </section>
 
-        <section class="content-grid">
+        <section class="content-grid" id="categories">
           <article class="panel">
             <div class="panel-header">
               <div>
@@ -109,7 +107,7 @@
         </section>
 
         <section class="transactions-section" id="transactions">
-          <article class="panel" id="transactions-card">
+          <article class="panel">
             <div class="panel-header">
               <div>
                 <p class="eyebrow">Recent activity</p>
@@ -168,8 +166,6 @@
           </div>
 
           <p id="expenseError" class="form-message error" role="alert" aria-live="polite"></p>
-          <p id="expenseSuccess" class="form-message success" aria-live="polite"></p>
-
           <div class="modal-actions">
             <button id="cancelExpense" class="secondary-button" type="button">Cancel</button>
             <button class="primary-button" type="submit">Save expense</button>
